@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>て形フラッシュカード</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B9D;
+            --secondary: #FEC163;
+            --accent: #4ECDC4;
+            --dark: #2D3142;
+            --light: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --group1: #FF6B9D;
+            --group2: #4ECDC4;
+            --group3: #FEC163;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Decorative background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,107,157,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(78,205,196,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+
+        /* Flashcard */
+        .flashcard-container {
+            animation: fadeInUp 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flashcard {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flashcard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .card-number {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #BDBDBD;
+            font-size: 0.9rem;
+        }
+
+        .group-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .group-1 { background: var(--group1); }
+        .group-2 { background: var(--group2); }
+        .group-3 { background: var(--group3); }
+
+        .question-section {
+            animation: scaleIn 0.5s ease;
+        }
+
+        .verb-main {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .romaji {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            color: #757575;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .english {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: #9E9E9E;
+            font-weight: 500;
+        }
+
+        .speaker-btn {
+            background: linear-gradient(135deg, var(--accent), #3ABDB4);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin: 25px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(78,205,196,0.4);
+        }
+
+        .speaker-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(78,205,196,0.5);
+        }
+
+        .show-answer-btn {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px auto 0;
+            box-shadow: 0 8px 25px rgba(255,107,157,0.4);
+        }
+
+        .show-answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(255,107,157,0.5);
+        }
+
+        .show-answer-btn.hidden {
+            display: none;
+        }
+
+        .answer-section {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.4s ease;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 3px dashed #E0E0E0;
+        }
+
+        .answer-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .answer-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #9E9E9E;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .verb-answer {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .next-btn {
+            padding: 16px 50px;
+            background: linear-gradient(135deg, var(--accent), #3ABDB4);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px auto 0;
+            box-shadow: 0 8px 25px rgba(78,205,196,0.4);
+            display: none;
+        }
+
+        .next-btn.visible {
+            display: block;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(78,205,196,0.5);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .verb-main {
+                font-size: 2.5rem;
+            }
+
+            .verb-answer {
+                font-size: 2.2rem;
+            }
+
+            .flashcard {
+                padding: 40px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌸 て形フラッシュカード</h1>
+            <p class="subtitle">Te-form Practice</p>
+        </header>
+
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="card-number" id="cardNumber">1 / 14</div>
+                
+                <div class="group-badge" id="groupBadge">グループ1</div>
+                
+                <div class="question-section" id="questionSection">
+                    <div class="verb-main" id="verbMain">かいます</div>
+                    <div class="romaji" id="romaji">kaimasu</div>
+                    <div class="english" id="english">buy</div>
+                    <button class="speaker-btn" id="speakerQuestion">🔊</button>
+                    <button class="show-answer-btn" id="showAnswerBtn">Show Answer</button>
+                </div>
+
+                <div class="answer-section" id="answerSection">
+                    <div class="answer-label">Te-form</div>
+                    <div class="verb-answer" id="verbAnswer">かって</div>
+                    <div class="romaji" id="romajiAnswer">katte</div>
+                    <button class="speaker-btn" id="speakerAnswer">🔊</button>
+                </div>
+            </div>
+            
+            <button class="next-btn" id="nextBtn">Next</button>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 7.14%"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // データ
+        const verbData = [
+            { masu: 'かいます', romaji: 'kaimasu', english: 'buy', te: 'かって', teRomaji: 'katte', group: 1 },
+            { masu: 'あいます', romaji: 'aimasu', english: 'meet', te: 'あって', teRomaji: 'atte', group: 1 },
+            { masu: 'かきます', romaji: 'kakimasu', english: 'write', te: 'かいて', teRomaji: 'kaite', group: 1 },
+            { masu: 'ききます', romaji: 'kikimasu', english: 'listen, ask', te: 'きいて', teRomaji: 'kiite', group: 1 },
+            { masu: 'のみます', romaji: 'nomimasu', english: 'drink', te: 'のんで', teRomaji: 'nonde', group: 1 },
+            { masu: 'よみます', romaji: 'yomimasu', english: 'read', te: 'よんで', teRomaji: 'yonde', group: 1 },
+            { masu: 'おくります', romaji: 'okurimasu', english: 'send', te: 'おくって', teRomaji: 'okutte', group: 1 },
+            { masu: 'かえります', romaji: 'kaerimasu', english: 'return', te: 'かえって', teRomaji: 'kaette', group: 1 },
+            { masu: 'いきます', romaji: 'ikimasu', english: 'go', te: 'いって', teRomaji: 'itte', group: 1 },
+            { masu: 'たべます', romaji: 'tabemasu', english: 'eat', te: 'たべて', teRomaji: 'tabete', group: 2 },
+            { masu: 'みます', romaji: 'mimasu', english: 'see, watch', te: 'みて', teRomaji: 'mite', group: 2 },
+            { masu: 'します', romaji: 'shimasu', english: 'do', te: 'して', teRomaji: 'shite', group: 3 },
+            { masu: 'べんきょうします', romaji: 'benkyou shimasu', english: 'study', te: 'べんきょうして', teRomaji: 'benkyou shite', group: 3 },
+            { masu: 'きます', romaji: 'kimasu', english: 'come', te: 'きて', teRomaji: 'kite', group: 3 }
+        ];
+
+        let currentIndex = 0;
+        let isAnswerShown = false;
+
+        // 要素取得
+        const flashcard = document.getElementById('flashcard');
+        const cardNumber = document.getElementById('cardNumber');
+        const groupBadge = document.getElementById('groupBadge');
+        const verbMain = document.getElementById('verbMain');
+        const romaji = document.getElementById('romaji');
+        const english = document.getElementById('english');
+        const speakerQuestion = document.getElementById('speakerQuestion');
+        const showAnswerBtn = document.getElementById('showAnswerBtn');
+        const answerSection = document.getElementById('answerSection');
+        const verbAnswer = document.getElementById('verbAnswer');
+        const romajiAnswer = document.getElementById('romajiAnswer');
+        const speakerAnswer = document.getElementById('speakerAnswer');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressFill = document.getElementById('progressFill');
+
+        // 音声再生関数
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.8;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // カードを表示
+        function displayCard() {
+            const card = verbData[currentIndex];
+            
+            // 問題側を表示
+            verbMain.textContent = card.masu;
+            romaji.textContent = card.romaji;
+            english.textContent = card.english;
+            
+            // 答え側を表示（非表示状態）
+            verbAnswer.textContent = card.te;
+            romajiAnswer.textContent = card.teRomaji;
+            
+            // グループバッジ
+            groupBadge.textContent = `グループ${card.group}`;
+            groupBadge.className = `group-badge group-${card.group}`;
+            
+            // カード番号
+            cardNumber.textContent = `${currentIndex + 1} / ${verbData.length}`;
+            
+            // プログレスバー
+            const progress = ((currentIndex + 1) / verbData.length) * 100;
+            progressFill.style.width = `${progress}%`;
+            
+            // 答えをリセット
+            isAnswerShown = false;
+            answerSection.classList.remove('visible');
+            nextBtn.classList.remove('visible');
+            showAnswerBtn.classList.remove('hidden');
+        }
+
+        // 回答を表示ボタン
+        showAnswerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!isAnswerShown) {
+                answerSection.classList.add('visible');
+                nextBtn.classList.add('visible');
+                showAnswerBtn.classList.add('hidden');
+                isAnswerShown = true;
+            }
+        });
+
+        // 問題の音声ボタン
+        speakerQuestion.addEventListener('click', (e) => {
+            e.stopPropagation();
+            speak(verbData[currentIndex].masu);
+        });
+
+        // 答えの音声ボタン
+        speakerAnswer.addEventListener('click', (e) => {
+            e.stopPropagation();
+            speak(verbData[currentIndex].te);
+        });
+
+        // 次へボタン
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            if (currentIndex >= verbData.length - 1) {
+                // 完了画面へ
+                currentIndex++;
+                verbMain.textContent = 'Completed!';
+                romaji.textContent = 'Great job!';
+                english.textContent = '🎉';
+                speakerQuestion.style.display = 'none';
+                showAnswerBtn.style.display = 'none';
+                answerSection.style.display = 'none';
+                groupBadge.style.display = 'none';
+                
+                // Start Overボタンに変更
+                nextBtn.textContent = 'Start Over';
+                nextBtn.classList.add('visible');
+                
+                // イベントリスナーを一度削除して再設定
+                const newBtn = nextBtn.cloneNode(true);
+                nextBtn.parentNode.replaceChild(newBtn, nextBtn);
+                
+                newBtn.addEventListener('click', () => {
+                    location.reload();
+                });
+            } else {
+                // 次のカードへ
+                currentIndex++;
+                displayCard();
+            }
+        });
+
+        // 初期表示
+        displayCard();
+    </script>
+</body>
+</html>
